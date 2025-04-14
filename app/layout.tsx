@@ -15,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`${inter.className} min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
         <ThemeProvider attribute="class" defaultTheme="dark">
           <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-rose-100 via-yellow-100 to-teal-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-800 z-[-1]" />
@@ -32,6 +35,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
