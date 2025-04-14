@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { MessageCircleCode } from "lucide-react";
+import bot from "../public/bot_4712139.png";
 
 export default function Header() {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -14,7 +16,7 @@ export default function Header() {
     },
   ]);
   const [newMessage, setNewMessage] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Loading state to track if the AI is thinking
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleChatbot = () => {
     setIsChatbotOpen(!isChatbotOpen);
@@ -22,15 +24,14 @@ export default function Header() {
   };
 
   const sendMessage = async () => {
-    if (!userMessage.trim()) return; // Don't send empty messages
+    if (!userMessage.trim()) return;
 
-    // Add user message to chat history
     setChatHistory((prev) => [
       ...prev,
       { message: userMessage, sender: "user" },
     ]);
     setUserMessage("");
-    setIsLoading(true); // Set loading to true when waiting for a response
+    setIsLoading(true);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/api/chatbot/", {
@@ -42,19 +43,18 @@ export default function Header() {
       if (!response.ok) throw new Error("Server error");
       const data = await response.json();
 
-      // Add bot's response to the chat history
       setChatHistory((prev) => [
         ...prev,
         { message: data.response, sender: "bot" },
       ]);
-      setNewMessage(true); // Set new message received
+      setNewMessage(true);
     } catch {
       setChatHistory((prev) => [
         ...prev,
         { message: "Error: No response from server.", sender: "bot" },
       ]);
     } finally {
-      setIsLoading(false); // Set loading to false once the response is received
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +91,7 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={toggleChatbot}
-                  className="relative p-3  bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-transform"
+                  className="relative p-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-transform"
                 >
                   <MessageCircleCode />
                 </button>
@@ -109,19 +109,24 @@ export default function Header() {
         </nav>
       </motion.header>
 
-      {/* Stylish Chatbot Modal */}
+      {/* Bot image below the header */}
+      {/* <div className="flex justify-center my-4">
+        <Image src={bot} alt="Bot" width={60} height={60} />
+      </div> */}
+
+      {/* Chatbot Modal */}
       {isChatbotOpen && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-0 right-0 z-50 w-[420px] h-[520px] bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg rounded-2xl shadow-2xl flex flex-col overflow-hidden "
+          className="fixed bottom-0 right-0 z-50 w-[420px] h-[520px] bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg rounded-2xl shadow-2xl flex flex-col overflow-hidden"
         >
           {/* Chatbot Header */}
           <div className="flex justify-between items-center p-4 bg-gradient-to-b from-gray-900 to-gray-800 text-white rounded-t-2xl">
             <div className="flex items-center space-x-2">
-              <h2 className="text-lg font-semibold">Chatbot</h2>
-              {/* Blinking Green Light beside Chatbot Text */}
+              <Image src={bot} alt="Bot" width={30} height={30} />
+              <h2 className="text-lg font-semibold">MarketBot</h2>
               {newMessage && (
                 <motion.span className="w-2.5 h-2.5 bg-[#90EE90] rounded-full animate-pulse" />
               )}
@@ -154,14 +159,12 @@ export default function Header() {
 
             {isLoading && (
               <div className="p-2 max-w-xs shadow-md bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 self-start rounded-xl flex items-center space-x-2">
-                <div className="w-3 h-3 border-4 border-t-4 border-gray-400 dark:border-white border-solid rounded-full animate-pulse"></div>{" "}
-                {/* <span className="text-gray-500">   ...</span> */}
-                {/* Small Loader */}
+                <div className="w-3 h-3 border-4 border-t-4 border-gray-400 dark:border-white border-solid rounded-full animate-pulse"></div>
               </div>
             )}
           </div>
 
-          {/* Input Box & Send Button */}
+          {/* Input Box */}
           <div className="p-4 bg-gray-200 dark:bg-gray-900 flex space-x-2">
             <input
               type="text"
@@ -172,7 +175,7 @@ export default function Header() {
             />
             <button
               onClick={sendMessage}
-              className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-md hover:scale-105 transition-transform "
+              className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-md hover:scale-105 transition-transform"
             >
               ➤
             </button>
